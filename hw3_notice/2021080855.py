@@ -1,6 +1,5 @@
 import sys
 import math
-from collections import deque
 
 input_file = sys.argv[1]
 n = int(sys.argv[2])
@@ -39,10 +38,10 @@ for p in points:
 
     # start cluster
     label[p] = cluster_id # next cluseter id
-    seed_set = deque(neighbors)
+    seed_set = set(neighbors)
 
     while seed_set:
-        q = seed_set.popleft()
+        q = seed_set.pop()
 
         if label.get(q) == -1: # noise인데 border point
             label[q] = cluster_id
@@ -56,9 +55,7 @@ for p in points:
         if len(q_neighbors) < min_pts: # core point check
             continue
         
-        for neighbor in q_neighbors:
-            if neighbor not in label:
-                seed_set.append(neighbor)
+        seed_set |= set(q_neighbors)
 
     cluster_id += 1
 
